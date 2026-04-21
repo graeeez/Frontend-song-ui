@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --neon-orange: #FF5F1F;
+  --dark-ink: #080C0D;
+  --muted-teal: #1A2E33;
+}
+
+body {
+  margin: 0;
+  background-color: var(--dark-ink);
+  color: #E2E8F0;
+  font-family: 'Space Grotesk', sans-serif; /* A sleeker, modern font */
+  overflow-x: hidden;
+}
+
+/* Texture from your image: Subtle Grain */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+}
+
+/* Sharp, sleek scrollbar */
+::-webkit-scrollbar { width: 2px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--neon-orange); }
