@@ -3,17 +3,18 @@ import {
   Box, Typography, Stack, Button, 
   IconButton, TextField, Paper, Collapse 
 } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import shapesImage from "./assets/1.png"; 
 
+// Using localhost for your local editing session
 const API_BASE = "https://song-api-76uh.onrender.com/pastoral/songs";
 
 export default function App() {
   const [songs, setSongs] = useState([]);
   const [currentSong, setCurrentSong] = useState(null);
   const [editingId, setEditingId] = useState(null); 
+  const [searchTerm, setSearchTerm] = useState("");
   const [formData, setFormData] = useState({ title: "", artist: "", url: "" });
 
   const fetchSongs = async () => {
@@ -26,6 +27,12 @@ export default function App() {
   };
 
   useEffect(() => { fetchSongs(); }, []);
+
+  // Search Filtering Logic
+  const filteredSongs = songs.filter(song => 
+    song.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    song.artist.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleSave = async () => {
     if (!formData.url || !formData.title) return;
@@ -66,7 +73,7 @@ export default function App() {
       {/* BACKGROUND TEXTURE */}
       <Box sx={{ 
         position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none', 
-        opacity: 0.10, backgroundImage: `url(${shapesImage})`, backgroundSize: 'cover' 
+        opacity: 0.30, backgroundImage: `url(${shapesImage})`, backgroundSize: 'cover' 
       }} />
 
       <Box sx={{ flexGrow: 1, display: 'flex', position: 'relative', zIndex: 1 }}>
@@ -80,10 +87,28 @@ export default function App() {
             VINYL<span style={{ color: '#FF5F1F' }}>IST</span>
           </Typography>
 
-          <Typography variant="h2" sx={{ fontWeight: 900, mb: 4, letterSpacing: -3 }}>A side</Typography>
+          <Typography variant="h2" sx={{ fontWeight: 900, mb: 2, letterSpacing: -3 }}>
+            COLLECTION
+          </Typography>
+
+          {/* SEARCH BAR */}
+          <TextField 
+            placeholder="SEARCH TRACKS..."
+            variant="standard"
+            fullWidth
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            sx={{ 
+              mb: 6, 
+              input: { color: 'white', fontWeight: 700, fontSize: '0.8rem', letterSpacing: 1 },
+              '& .MuiInput-underline:before': { borderBottomColor: 'rgba(255,255,255,0.1)' },
+              '& .MuiInput-underline:hover:before': { borderBottomColor: 'rgba(255,255,255,0.3) !important' },
+              '& .MuiInput-underline:after': { borderBottomColor: '#FF5F1F' }
+            }}
+          />
 
           <Stack spacing={1} sx={{ flexGrow: 1, overflowY: 'auto', '&::-webkit-scrollbar': { width: 0 } }}>
-            {songs.map((song, index) => (
+            {filteredSongs.map((song, index) => (
               <Box 
                 key={song.id} 
                 onClick={() => setCurrentSong(song)}
@@ -117,13 +142,12 @@ export default function App() {
         {/* RIGHT SIDE: PLAYER & EDITOR (LIGHT) */}
         <Box sx={{ flex: 1.8, bgcolor: '#E7E2D8', p: 6, display: 'flex', flexDirection: 'column' }}>
           
-        
-
           {/* PLAYER */}
           <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <Paper sx={{ width: '100%', maxWidth: '750px', aspectRatio: '16/9', bgcolor: 'black', borderRadius: 1, overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}>
               {currentSong && (
                 <iframe
+                  title="player"
                   style={{ width: '100%', height: '100%' }}
                   src={`https://www.youtube.com/embed/${getYouTubeId(currentSong.url)}?autoplay=1`}
                   frameBorder="0" allow="autoplay"
@@ -132,7 +156,7 @@ export default function App() {
             </Paper>
           </Box>
 
-          {/* TEXT VISIBILITY FIX HERE */}
+          {/* PLAYER INFO - High Visibility Text */}
           <Box sx={{ mt: 6 }}>
             <Typography variant="h3" sx={{ fontWeight: 900, textTransform: 'uppercase', color: '#0B1011', letterSpacing: -1 }}>
               {currentSong?.title || "Select Track"}
@@ -141,9 +165,10 @@ export default function App() {
               {currentSong?.artist || "Unknown Artist"}
             </Typography>
           </Box>
+
           <Typography sx={{ opacity: 0.1, my: 4 }}>_________________________________________________</Typography>
 
-            {/* EDITOR FORM */}
+          {/* EDITOR FORM */}
           <Paper elevation={0} sx={{ p: 3, mb: 6, bgcolor: 'rgba(0,0,0,0.04)', borderRadius: 2, border: editingId ? '1px solid #FF5F1F' : '1px solid transparent' }}>
             <Typography variant="caption" sx={{ fontWeight: 900, color: '#FF5F1F', mb: 2, display: 'block' }}>
               {editingId ? "MODIFYING RECORD" : "QUICK ADD URL"}
