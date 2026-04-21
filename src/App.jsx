@@ -8,7 +8,7 @@ import EditIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import shapesImage from "./assets/1.png"; 
 
-const API_BASE = "http://localhost:8080/pastoral/songs";
+const API_BASE = "https://song-api-76uh.onrender.com/pastoral/songs";
 
 export default function App() {
   const [songs, setSongs] = useState([]);
