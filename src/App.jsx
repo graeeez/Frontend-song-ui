@@ -141,7 +141,7 @@ export default function App() {
               {currentSong?.artist || "Unknown Artist"}
             </Typography>
           </Box>
-          <br>______________</br>
+          <Typography sx={{ opacity: 0.1, my: 4 }}>_________________________________________________</Typography>
 
             {/* EDITOR FORM */}
           <Paper elevation={0} sx={{ p: 3, mb: 6, bgcolor: 'rgba(0,0,0,0.04)', borderRadius: 2, border: editingId ? '1px solid #FF5F1F' : '1px solid transparent' }}>
